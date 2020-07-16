@@ -10,17 +10,16 @@ redirect_from:
 title: Best practices for writing Dockerfiles
 ---
 
-This document covers recommended best practices and methods for building
-efficient images.
+เอกสารฉบับนี้ ได้รวบรวมคำแนะนำการใช้งานและวิธีการในการสร้าง image อย่างมีประสิทธิภาพ
 
-Docker builds images automatically by reading the instructions from a
-`Dockerfile` -- a text file that contains all commands, in order, needed to
-build a given image. A `Dockerfile` adheres to a specific format and set of
-instructions which you can find at [Dockerfile reference](../../engine/reference/builder.md).
+Docker จะสร้าง image โดยอัตโนมัติ ด้วยการอ่านคำชุดคำสั่งจาก `Dockerfile` ( ไฟล์ที่รวบรวมชุดคำสั่งทั้งหมดที่จำเป็นต่อการสร้าง Image โดยเรียงลำดับจากบนลงล่าง )
+การเขียน `Dockerfile` นั้น จึงจำเป็นต้องอ้างอิงจากเอกสาร เนื่องจากมีชุดคำสั่งที่เฉพาะเจาะจง คุณสามารถดูได้จาก [Dockerfile reference](../../engine/reference/builder.md)
 
-A Docker image consists of read-only layers each of which represents a
-Dockerfile  instruction. The layers are stacked and each one is a delta of the
-changes from the previous layer. Consider this `Dockerfile`:
+Docker image ประกอบไปด้วย ชั้นข้อมูล read-only โดยที่แต่ละชั้นถูกสร้างโดยคำสั่งต่างๆ ที่อยู่ใน Dockerfile 
+
+ชั้นข้อมูลจะถูกวางจากล่างขึ้นบน (Stack) โดยแต่ละชั้นคือการเปลี่ยนแปลงข้อมูลเพิ่มเติมจากชั้นด้านล่าง ขึ้นมาเรื่อย ๆ
+
+พิจารณา `Dockerfile` นี้:
 
 ```dockerfile
 FROM ubuntu:18.04
