@@ -28,20 +28,16 @@ RUN make /app
 CMD python /app/app.py
 ```
 
-Each instruction creates one layer:
+คำสั่งแต่ละบรรทัด สร้างชั้นข้อมูลขึ้นมา:
 
-- `FROM` creates a layer from the `ubuntu:18.04` Docker image.
-- `COPY` adds files from your Docker client's current directory.
-- `RUN` builds your application with `make`.
-- `CMD` specifies what command to run within the container.
+- `FROM` สร้างชั้นข้อมูลจาก Image หลักที่ชื่อว่า `ubuntu:18.04`
+- `COPY` เพิ่มไฟล์ทั้งหมดจากโฟล์เดอร์ปัจจุบัน ไปยังชั้นถัดไป 
+- `RUN` build แอปพลิเคชัน ด้วยคำสั่ง `make`
+- `CMD` ระบุคำสั่งที่จะใช้เมื่อนำ Image  มาสร้าง Container
 
-When you run an image and generate a container, you add a new _writable layer_
-(the "container layer") on top of the underlying layers. All changes made to
-the running container, such as writing new files, modifying existing files, and
-deleting files, are written to this thin writable container layer.
+เมื่อเราสร้าง Container จาก Image เราได้ทำงานเพิ่มชั้นข้อมูล Writable อีกชั้นหนึ่ง (the "container layer")  ทุกการเปลี่ยนแปลงที่เกิดขึ้นกับ Container นี้นั้น เช่น การเพิ่มไฟล์ใหม่ การเปลี่ยนแปลงข้อมูลที่มีอยู่แล้ว หรือการลบไฟล์ จะถูกทำบนชั้น Writable นี้
 
-For more on image layers (and how Docker builds and stores images), see
-[About storage drivers](../../storage/storagedriver/index.md).
+เรียนรู้เรื่อง ชั้นต่างๆ ของ Image ได้ที่ [About storage drivers](../../storage/storagedriver/index.md).
 
 ## General guidelines and recommendations
 
