@@ -32,29 +32,25 @@ CMD python /app/app.py
 
 ### Create ephemeral containers
 
-The image defined by your `Dockerfile` should generate containers that are as
-ephemeral as possible. By "ephemeral", we mean that the container can be stopped
-and destroyed, then rebuilt and replaced with an absolute minimum set up and
-configuration.
+Imageที่กำหนดโดยDockerfile ของคุณควรสร้าง ephemeral containers ที่เป็นไปได้
+โดย "ephemeral" หมายความว่า containerสามารถหยุด และทำลาย จากนั้นก็สร้างใหม่และแทนที่ ด้วยการตั้งค่าและการกำหนดค่าขั้นต่ำ
 
-Refer to [Processes](https://12factor.net/processes) under _The Twelve-factor App_
-methodology to get a feel for the motivations of running containers in such a
-stateless fashion.
+อ้างถึงกระบวนการ(https://12factor.net/processes)ภายใต้ The Twelve-factor App เพื่อให้รู้สึกถึงแรงจูงใจ
+ในการใช้containerในรูปแบบที่ไม่จดจำสถานะ
+
 
 ### Understand build context
 
-When you issue a `docker build` command, the current working directory is called
-the _build context_. By default, the Dockerfile is assumed to be located here,
-but you can specify a different location with the file flag (`-f`). Regardless
-of where the `Dockerfile` actually lives, all recursive contents of files and
-directories in the current directory are sent to the Docker daemon as the build
-context.
+เมื่อคุณใช้คำสั่ง สร้าง Docker, directory ที่กำลังทำงานจะถูกเรียกว่า build context โดยเริ่มต้น Dockerfile จะอยู่ที่นี่ แต่คุณ
+สามารถระบุตำแหน่งอื่นได้ด้วย file flag (-f) เนื้อหาแบบเรียกซ้ำทั้งหมดของไฟล์และ directories ใน
+directoty ปัจจุบัน จะถูกส่งไปยัง Docker daemon เป็น build context.
+
 
 > Build context example
 >
-> Create a directory for the build context and `cd` into it. Write "hello" into
-> a text file named `hello` and create a Dockerfile that runs `cat` on it. Build
-> the image from within the build context (`.`):
+> สร้าง directory สำหรับ build context แล้วใช้ cd เพื่อเข้าไปเขียน "Hello"ลงในไฟล์ Hello และสร้าง
+> Dockerfile ที่รัน cat สร้าง image จาก build context (.): 
+> 
 >
 > ```shell
 > mkdir myproject && cd myproject
@@ -62,10 +58,10 @@ context.
 > echo -e "FROM busybox\nCOPY /hello /\nRUN cat /hello" > Dockerfile
 > docker build -t helloapp:v1 .
 > ```
->
-> Move `Dockerfile` and `hello` into separate directories and build a second
-> version of the image (without relying on cache from the last build). Use `-f`
-> to point to the Dockerfile and specify the directory of the build context:
+> ย้าย Dockerfile และ hello ไปยัง directories ที่แยกต่างหาก และสร้าง image
+>เวอร์ชันที่สอง(โดยไม่ต้องพึ่งพาcacheจากการสร้างล่าสุด)  
+>ใช้ -f เพื่อระบุตำแหน่งของ Dockerfile และ directory ของ  build context: 
+> 
 >
 > ```shell
 > mkdir -p dockerfiles context
@@ -73,11 +69,11 @@ context.
 > docker build --no-cache -t helloapp:v2 -f dockerfiles/Dockerfile context
 > ```
 
-Inadvertently including files that are not necessary for building an image
-results in a larger build context and larger image size. This can increase the
-time to build the image, time to pull and push it, and the container runtime
-size. To see how big your build context is, look for a message like this when
-building your `Dockerfile`:
+การรวมไฟล์ที่ไม่จำเป็นสำหรับการสร้าง image ส่งผลให้เกิดการ build context และ image ที่มีขนาดใหญ่ สิ่งนี้จะเพิ่มเวลาในการสร้างimage, 
+เวลาที่จะpull และ push และเพิ่มขนาดruntime ของcontainer หากต้องการดูว่า 
+build context ของคุณมีความใหญ่ขนาดไหนให้ค้นหาโดยใช้ข้อความนี้ตอนที่คุณกำลังสร้าง Dockerfile :
+
+
 
 ```none
 Sending build context to Docker daemon  187.8MB
