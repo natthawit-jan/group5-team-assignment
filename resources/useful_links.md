@@ -2,4 +2,4 @@
 
 2. [Markdown file of the original source](https://github.com/docker/docker.github.io/blob/master/develop/develop-images/dockerfile_best-practices.md)
 
-3.[Link to Best Practice for writting Dockerfile](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)
+3. [Link to Best Practice for writting Dockerfile](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)
