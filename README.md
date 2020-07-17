@@ -376,19 +376,15 @@ image. The basic rules that Docker follows are outlined below:
 Once the cache is invalidated, all subsequent `Dockerfile` commands generate new
 images and the cache is not used.
 
-## Dockerfile instructions
+## ชุดคำสั่งต่างๆ ใน Dockerfile
 
-These recommendations are designed to help you create an efficient and
-maintainable `Dockerfile`.
+คำแนะนำต่อไปนี้ถูกออกแบบมาเพื่อช่วยให้คุณสร้าง `Dockerfile` ที่มีประสิทธิภาพและง่ายต่อการดูแล
 
 ### FROM
 
 [Dockerfile reference for the FROM instruction](../../engine/reference/builder.md#from)
 
-Whenever possible, use current official images as the basis for your
-images. We recommend the [Alpine image](https://hub.docker.com/_/alpine/) as it
-is tightly controlled and small in size (currently under 5 MB), while still
-being a full Linux distribution.
+ทุกครั้งที่่เป็นไปได้ คุณควรใช้ Official Image เป็นฐาน Image หลักในการเขียน `Dockerfile` เราแนะนำ [Alpine image](https://hub.docker.com/_/alpine/) เนื่องจากว่า Image เหล่านี้มีการควบคุมให้มีขนาดเล็ก (น้อยกว่า 5 MB ) แต่ยังคงความเป็นระบบปฏิบัติการ Linux อย่างเต็มที่เหมือนเดิม
 
 ### LABEL
 
