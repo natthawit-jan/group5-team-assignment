@@ -390,13 +390,15 @@ images and the cache is not used.
 
 [Understanding object labels](../../config/labels-custom-metadata.md)
 
-You can add labels to your image to help organize images by project, record
-licensing information, to aid in automation, or for other reasons. For each
-label, add a line beginning with `LABEL` and with one or more key-value pairs.
-The following examples show the different acceptable formats. Explanatory comments are included inline.
+คุณสามารถติดป้าย (label) ให้กับ image ของคุณ  ไม่ว่าจะด้วยชื่อของ project หรือ ข้อมูลใบอนุญาต ทั้งนี้เพื่อการง่ายขึ้นสำหรับการทดสอบอัตโนมัติ หรือเพื่อเหตุผลอื่นๆ 
 
-> Strings with spaces must be quoted **or** the spaces must be escaped. Inner
-> quote characters (`"`), must also be escaped.
+เพื่อเริ่มการติดป้าย เริ่มต้นบรรทัดใหม่ด้วยคำว่า `LABEL` และตามด้วย key-value ที่ต้องการ
+
+ตัวอย่างดังต่อไปนี้ แสดงให้เห็นถึง รูปแบบที่ถูกต้องในการติดป้ายให้กับ Image 
+
+> Strings ที่มีช่องว่างต้องอยู่ใน `" "` **หรือ** ต้องถูก escape (`/`) 
+> 
+> เครื่องหมาย `"` ที่อยู่ใน String ก็ต้องถูก escape ด้วยเช่นกัน
 
 ```dockerfile
 # Set one or more individual labels
@@ -407,17 +409,15 @@ LABEL com.example.release-date="2015-02-12"
 LABEL com.example.version.is-production=""
 ```
 
-An image can have more than one label. Prior to Docker 1.10, it was recommended
-to combine all labels into a single `LABEL` instruction, to prevent extra layers
-from being created. This is no longer necessary, but combining labels is still
-supported.
+Image หนึ่งสามารถมีได้มากกว่าหนึ่งป้าย 
+ใน Docker เวอร์ชัน 1.10 นั้น ผู้ใช้งานถูกแนะนำให้รวมทุกป้ายเข้าด้วยกันเป็นอันเดียว ในหนึ่งคำสั่ง `LABEL` เพื่อป้องกันการสร้างชั้นข้อมูลหลายชั้น ปัญหานี้ถูกแก้ไขแล้วในเวอร์ชันปัจจุบัน แต่การใช้งานแบบเก่าก็ยังคงทำได้อยู่
 
 ```dockerfile
-# Set multiple labels on one line
+# การติดหลายๆป้ายด้วยคำสั่ง LABEL เพียงครั้งเดียว
 LABEL com.example.version="0.0.1-beta" com.example.release-date="2015-02-12"
 ```
 
-The above can also be written as:
+การเขียนแบบด้านบนสามารถ เขียนได้อีกแบบคือ
 
 ```dockerfile
 # Set multiple labels at once, using line-continuation characters to break long lines
@@ -428,11 +428,8 @@ LABEL vendor=ACME\ Incorporated \
       com.example.release-date="2015-02-12"
 ```
 
-See [Understanding object labels](../../config/labels-custom-metadata.md)
-for guidelines about acceptable label keys and values. For information about
-querying labels, refer to the items related to filtering in
-[Managing labels on objects](../../config/labels-custom-metadata.md#manage-labels-on-objects).
-See also [LABEL](../../engine/reference/builder.md#label) in the Dockerfile reference.
+ดู [Understanding object labels](../../config/labels-custom-metadata.md)
+เพื่อการศึกษาเพิ่มเรื่อง Key-value 
 
 ### RUN
 
