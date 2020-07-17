@@ -1,15 +1,14 @@
 
-This document covers recommended best practices and methods for building
-efficient images.
+เอกสารฉบับนี้ ได้รวบรวมคำแนะนำการใช้งานและวิธีการในการสร้าง image อย่างมีประสิทธิภาพ
 
-Docker builds images automatically by reading the instructions from a
-`Dockerfile` -- a text file that contains all commands, in order, needed to
-build a given image. A `Dockerfile` adheres to a specific format and set of
-instructions which you can find at [Dockerfile reference](../../engine/reference/builder.md).
+Docker จะสร้าง image โดยอัตโนมัติ ด้วยการอ่านคำชุดคำสั่งจาก `Dockerfile` ( ไฟล์ที่รวบรวมชุดคำสั่งทั้งหมดที่จำเป็นต่อการสร้าง Image โดยเรียงลำดับจากบนลงล่าง )
+การเขียน `Dockerfile` นั้น จึงจำเป็นต้องอ้างอิงจากเอกสาร เนื่องจากมีชุดคำสั่งที่เฉพาะเจาะจง คุณสามารถดูได้จาก [Dockerfile reference](../../engine/reference/builder.md)
 
-A Docker image consists of read-only layers each of which represents a
-Dockerfile  instruction. The layers are stacked and each one is a delta of the
-changes from the previous layer. Consider this `Dockerfile`:
+Docker image ประกอบไปด้วย ชั้นข้อมูล read-only โดยที่แต่ละชั้นถูกสร้างโดยคำสั่งต่างๆ ที่อยู่ใน Dockerfile 
+
+ชั้นข้อมูลจะถูกวางจากล่างขึ้นบน (Stack) โดยแต่ละชั้นคือการเปลี่ยนแปลงข้อมูลเพิ่มเติมจากชั้นด้านล่าง ขึ้นมาเรื่อย ๆ
+
+พิจารณา `Dockerfile` นี้:
 
 ```dockerfile
 FROM ubuntu:18.04
@@ -18,20 +17,16 @@ RUN make /app
 CMD python /app/app.py
 ```
 
-Each instruction creates one layer:
+คำสั่งแต่ละบรรทัด สร้างชั้นข้อมูลขึ้นมา:
 
-- `FROM` creates a layer from the `ubuntu:18.04` Docker image.
-- `COPY` adds files from your Docker client's current directory.
-- `RUN` builds your application with `make`.
-- `CMD` specifies what command to run within the container.
+- `FROM` สร้างชั้นข้อมูลจาก Image หลักที่ชื่อว่า `ubuntu:18.04`
+- `COPY` เพิ่มไฟล์ทั้งหมดจากโฟล์เดอร์ปัจจุบัน ไปยังชั้นถัดไป 
+- `RUN` build แอปพลิเคชัน ด้วยคำสั่ง `make`
+- `CMD` ระบุคำสั่งที่จะใช้เมื่อนำ Image  มาสร้าง Container
 
-When you run an image and generate a container, you add a new _writable layer_
-(the "container layer") on top of the underlying layers. All changes made to
-the running container, such as writing new files, modifying existing files, and
-deleting files, are written to this thin writable container layer.
+เมื่อเราสร้าง Container จาก Image เราได้ทำงานเพิ่มชั้นข้อมูล Writable อีกชั้นหนึ่ง (the "container layer")  ทุกการเปลี่ยนแปลงที่เกิดขึ้นกับ Container นี้นั้น เช่น การเพิ่มไฟล์ใหม่ การเปลี่ยนแปลงข้อมูลที่มีอยู่แล้ว หรือการลบไฟล์ จะถูกทำบนชั้น Writable นี้
 
-For more on image layers (and how Docker builds and stores images), see
-[About storage drivers](../../storage/storagedriver/index.md).
+เรียนรู้เรื่อง ชั้นต่างๆ ของ Image ได้ที่ [About storage drivers](../../storage/storagedriver/index.md).
 
 ## General guidelines and recommendations
 
