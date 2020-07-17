@@ -1,14 +1,3 @@
----
-description: Hints, tips and guidelines for writing clean, reliable Dockerfiles
-keywords: parent image, images, dockerfile, best practices, hub, official image
-redirect_from:
-- /articles/dockerfile_best-practices/
-- /engine/articles/dockerfile_best-practices/
-- /docker-cloud/getting-started/intermediate/optimize-dockerfiles/
-- /docker-cloud/tutorials/optimize-dockerfiles/
-- /engine/userguide/eng-image/dockerfile_best-practices/
-title: Best practices for writing Dockerfiles
----
 
 เอกสารฉบับนี้ ได้รวบรวมคำแนะนำการใช้งานและวิธีการในการสร้าง image อย่างมีประสิทธิภาพ
 
