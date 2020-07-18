@@ -187,21 +187,15 @@ EOF
 
 #### Build from a remote build context, using a Dockerfile from stdin
 
-Use this syntax to build an image using files from a remote `git` repository, 
-using a `Dockerfile` from `stdin`. The syntax uses the `-f` (or `--file`) option to
-specify the `Dockerfile` to use, using a hyphen (`-`) as filename to instruct
-Docker to read the `Dockerfile` from `stdin`:
+เราจะใช้ syntax นี้เพื่อสร้าง image โดยใช้ไฟล์จากรีโมทของ `git` repository และใช้ `Dockerfile`จาก `stdin` โดยการใช้เครื่องหมาย option `-f` (หรือ `--file`) เพื่อระบุ `Dockerfile` ที่จะใช้ และใช้เครื่องหมายขีด (`-` หรือ Hyphen) เพื่อบอกชื่อไฟล์ให้ Docker ไปอ่าน `Dockerfile` จาก `stdin`:
 
 ```bash
 docker build [OPTIONS] -f- PATH
 ```
 
-This syntax can be useful in situations where you want to build an image from a
-repository that does not contain a `Dockerfile`, or if you want to build with a custom
-`Dockerfile`, without maintaining your own fork of the repository.
+Syntax จะมีประโยชน์มากในเวลาที่เราต้องการที่จะสร้าง image จาก repository ที่ไม่มี `Dockerfile` อยู่ในนั้น หรือสร้าง custom `Dockerfile` โดยที่ไม่เก็บ fork ของตัวเองใน repository
 
-The example below builds an image using a `Dockerfile` from `stdin`, and adds
-the `hello.c` file from the ["hello-world" Git repository on GitHub](https://github.com/docker-library/hello-world).
+ตัวอย่างข้างล่างเป็นการสร้าง image โดยใช้ `Dockerfile` จาก `stdin` และเพิ่มไฟล์ `hello.c` จาก ["hello-world" Git repository บน GitHub](https://github.com/docker-library/hello-world)
 
 ```bash
 docker build -t myimage:latest -f- https://github.com/docker-library/hello-world.git <<EOF
@@ -212,10 +206,10 @@ EOF
 
 > **Under the hood**
 >
-> When building an image using a remote Git repository as build context, Docker 
-> performs a `git clone` of the repository on the local machine, and sends
-> those files as build context to the daemon. This feature requires `git` to be
-> installed on the host where you run the `docker build` command.
+> เมื่อสร้าง image โดยใช้ remote Git repository เป็น build context แล้ว
+> Docker จะใช้คำสั่ง `git clone` ของ repository บนเครื่อง local และส่ง
+> ไฟล์เหล่านั้นเป็น build context ไปที่ daemon โดยที่ feature นี้ต้องใช้ `git` 
+> เพื่อที่จะถูกติดตั้งที่ host ที่เราจะสามารถ run คำสั่ง `docker build` ได้
 
 ### Exclude with .dockerignore
 
