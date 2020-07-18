@@ -213,10 +213,8 @@ EOF
 
 ### Exclude with .dockerignore
 
-To exclude files not relevant to the build (without restructuring your source
-repository) use a `.dockerignore` file. This file supports exclusion patterns
-similar to `.gitignore` files. For information on creating one, see the
-[.dockerignore file](../../engine/reference/builder.md#dockerignore-file).
+เราจะใช้ไฟล์ `.dockerignore` เพื่อที่จะไม่ต้อง build ไฟล์ที่ไม่เกี่ยวข้องรวมไปด้วย (ไม่ต้องจัดโครงสร้างของ source repository ใหม่) ไฟล์นี้รองรับ exclusion patterns คล้ายกับไฟล์ `.gitignore` ส่วนข้อมูลในการสร้างเพิ่มเติม สามารถดูได้ที่ [.dockerignore file](../../engine/reference/builder.md#dockerignore-file)
+
 
 ### Use multi-stage builds
 
