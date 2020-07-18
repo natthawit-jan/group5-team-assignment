@@ -161,28 +161,23 @@ context, refer to [exclude with .dockerignore](#exclude-with-dockerignore).
 
 #### Build from a local build context, using a Dockerfile from stdin
 
-Use this syntax to build an image using files on your local filesystem, but using
-a `Dockerfile` from `stdin`. The syntax uses the `-f` (or `--file`) option to
-specify the `Dockerfile` to use, using a hyphen (`-`) as filename to instruct
-Docker to read the `Dockerfile` from `stdin`:
+เราจะใช้ syntax นี้เพื่อสร้าง image โดยใช้ไฟล์บนระบบ local แต่ใช้ `Dockerfile`จาก `stdin` โดยการใช้เครื่องหมาย option `-f` (หรือ `--file`) เพื่อระบุ `Dockerfile` ที่จะใช้ และใช้เครื่องหมายขีด (`-` หรือ Hyphen) เพื่อบอกชื่อไฟล์ให้ Docker ไปอ่าน `Dockerfile` จาก `stdin`:
 
 ```bash
 docker build [OPTIONS] -f- PATH
 ```
 
-The example below uses the current directory (`.`) as the build context, and builds
-an image using a `Dockerfile` that is passed through `stdin` using a [here
-document](http://tldp.org/LDP/abs/html/here-docs.html).
+ตัวอย่างข้างล่างนี้ใช้ directory ปัจจุบัน (`.`) เป็น build context และสร้าง image โดยการใช้ `Dockerfile` ผ่าน `stdin` โดยการใช้[เอกสารชุดนี้](http://tldp.org/LDP/abs/html/here-docs.html)
 
 ```bash
-# create a directory to work in
+# สร้าง directory ที่จะทำงาน
 mkdir example
 cd example
 
-# create an example file
+# สร้างไฟล์ตัวอย่าง
 touch somefile.txt
 
-# build an image using the current directory as context, and a Dockerfile passed through stdin
+# สร้าง image โดยใช้ directory ปัจจุบันเป็น context และ Dockerfile ที่ผ่าน stdin
 docker build -t myimage:latest -f- . <<EOF
 FROM busybox
 COPY somefile.txt .
