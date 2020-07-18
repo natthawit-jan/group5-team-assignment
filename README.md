@@ -218,51 +218,47 @@ EOF
 
 ### Use multi-stage builds
 
-[Multi-stage builds](multistage-build.md) allow you to drastically reduce the
-size of your final image, without struggling to reduce the number of intermediate
-layers and files.
+[Multi-stage builds](multistage-build.md) ช่วยให้ลดขนาดของ final image อย่างมากโดยที่ไม่ต้องไปยุ่งกับการลดจำนวนของ intermediate layers และไฟล์ 
 
-Because an image is built during the final stage of the build process, you can
-minimize image layers by [leveraging build cache](#leverage-build-cache).
+เพราะว่า image ถูกสร้างระหว่างขั้นตอนสุดท้ายของกระบวนการ build เราสามารถลด image layers โดย [leveraging build cache](#leverage-build-cache)
 
-For example, if your build contains several layers, you can order them from the
-less frequently changed (to ensure the build cache is reusable) to the more
-frequently changed:
+ตัวอย่างเช่นถ้า build ของเรามีหลาย layers เราสามารถบอกให้พวกมันจากเปลี่ยนแปลงไม่บ่อย (เพื่อที่จะมั่นใจได้ว่า build cache สามารถนำกลับมาใช้ใหม่ได้) เป็นให้เปลี่ยนแปลงบ่อยขึ้นได้
 
-* Install tools you need to build your application
+* ติดตั้งเครื่องมือที่ต้องการเพื่อ build application ของคุณ
 
-* Install or update library dependencies
+* ติดตั้ง หรือ อัพเดท library dependencies
 
-* Generate your application
+* สร้าง application
 
-A Dockerfile for a Go application could look like:
+Dockerfile ของ application Go จะเป็นแบบดังนี้:
 
 ```dockerfile
 FROM golang:1.11-alpine AS build
 
-# Install tools required for project
-# Run `docker build --no-cache .` to update dependencies
+# ติดตั้ง tools ที่ต้องใช้สำหรับ project
+# รัน `docker build --no-cache .` เพื่ออัพเดท dependencies
 RUN apk add --no-cache git
 RUN go get github.com/golang/dep/cmd/dep
 
-# List project dependencies with Gopkg.toml and Gopkg.lock
-# These layers are only re-built when Gopkg files are updated
+# List project dependencies ด้วย Gopkg.toml และ Gopkg.lock
+# Layers เหล่านี้จะถูก rebuild ก็ต่อเมื่อไฟล์ Gopkg ถูกอัพเดทเท่านั้น
 COPY Gopkg.lock Gopkg.toml /go/src/project/
 WORKDIR /go/src/project/
-# Install library dependencies
+# ติดตั้ง library dependencies
 RUN dep ensure -vendor-only
 
-# Copy the entire project and build it
-# This layer is rebuilt when a file changes in the project directory
+# คัดลอก project ทั้งหมดและ build ใหม่
+# Layer นี้จะถูก rebuild ก็ต่อเมื่อไฟล์มีการเปลี่ยนแปลงใน project directory
 COPY . /go/src/project/
 RUN go build -o /bin/project
 
-# This results in a single layer image
+# ผลที่ออกมาในรูปของ single layer image
 FROM scratch
 COPY --from=build /bin/project /bin/project
 ENTRYPOINT ["/bin/project"]
 CMD ["--help"]
 ```
+
 
 ### Don't install unnecessary packages
 
