@@ -815,12 +815,11 @@ frequently.
 
 ### WORKDIR
 
-[Dockerfile reference for the WORKDIR instruction](../../engine/reference/builder.md#workdir)
+[อ้างอิง Dockerfile สำหรับคำแนะนำของ WORKDIR](../../engine/reference/builder.md#workdir)
 
-For clarity and reliability, you should always use absolute paths for your
-`WORKDIR`. Also, you should use `WORKDIR` instead of  proliferating instructions
-like `RUN cd … && do-something`, which are hard to read, troubleshoot, and
-maintain.
+เพื่อความชัดเจนและปราศจากข้อบกพร่อง คุณควรใช้ absolute paths สำหรับ `WORKDIR` ของคุณ
+และคุณควรใช้ `WORKDIR`แทนการใช้คำสั่งยาวๆ เช่น `RUN cd … && do-something`
+ซึ่งจะยากในการอ่าน การแก้ไขปัญหา และการปรับปรุง
 
 ### ONBUILD
 
