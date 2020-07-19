@@ -794,32 +794,28 @@ frequently.
 
 ### ONBUILD
 
-[Dockerfile reference for the ONBUILD instruction](../../engine/reference/builder.md#onbuild)
+[การอ้างอิง Dockerfile สำหรับคำสั่ง ONBUILD ](../../engine/reference/builder.md#onbuild)
 
-An `ONBUILD` command executes after the current `Dockerfile` build completes.
-`ONBUILD` executes in any child image derived `FROM` the current image.  Think
-of the `ONBUILD` command as an instruction the parent `Dockerfile` gives
-to the child `Dockerfile`.
+คำสั่ง `ONBUILD` ทำหลังจากการสร้าง `Dockerfile` ปัจจุบันเสร็จสมบูรณ์.
+`ONBUILD` ดำเนินการใน child image ที่ได้รับจาก image ปัจจุบัน .  คิดว่าคำสั่ง `ONBUILD` เป็นคำสั่งที่ parent `Dockerfile` มอบให้  child `Dockerfile`.
 
-A Docker build executes `ONBUILD` commands before any command in a child
+Docker build เรียกใช้คำสั่ง `ONBUILD` ก่อนคำสั่งใดๆ ใน child
 `Dockerfile`.
 
-`ONBUILD` is useful for images that are going to be built `FROM` a given
-image. For example, you would use `ONBUILD` for a language stack image that
-builds arbitrary user software written in that language within the
-`Dockerfile`, as you can see in [Ruby’s `ONBUILD` variants](https://github.com/docker-library/ruby/blob/c43fef8a60cea31eb9e7d960a076d633cb62ba8d/2.4/jessie/onbuild/Dockerfile).
+`ONBUILD` มีประโยชน์สำหรับ image ที่กำลังจะสร้างจาก image ที่กำหนด ตัวอย่างเช่นคุณจะใช้  `ONBUILD` 
+มีประโยชน์สำหรับ image ที่กำลังจะสร้างจาก image ที่กำหนด ตัวอย่างเช่นคุณจะใช้ 
+`Dockerfile`, เหมือนที่คุณเห็นในตัวแปร  [Ruby’s `ONBUILD` variants](https://github.com/docker-library/ruby/blob/c43fef8a60cea31eb9e7d960a076d633cb62ba8d/2.4/jessie/onbuild/Dockerfile).
 
-Images built with `ONBUILD` should get a separate tag, for example:
+Image ที่สร้างด้วย  `ONBUILD` ควรได้รับtagแยกต่างหากตัวอย่างเช่น:
 `ruby:1.9-onbuild` or `ruby:2.0-onbuild`.
 
-Be careful when putting `ADD` or `COPY` in `ONBUILD`. The "onbuild" image
-fails catastrophically if the new build's context is missing the resource being
-added. Adding a separate tag, as recommended above, helps mitigate this by
-allowing the `Dockerfile` author to make a choice.
+ระวังเมื่อใส่ `ADD` หรือ `COPY` ใน `ONBUILD`. "onbuild" image
+ล้มเหลวอย่างหายนะถ้าหาก new build’s context ขาด resource ที่เพิ่มเข้ามา .การเพิ่ม tag แยก 
+ตามที่แนะนำข้างต้นจะช่วยลดปัญหานี้โดยอนุญาตให้ผู้เขียน `Dockerfile` ทำการสร้างตัวเลือก
 
 ## Examples for Official Images
 
-These Official Images have exemplary `Dockerfile`s:
+Images อย่างเป็นทางการเหล่านี้ มี `Dockerfile`s เป็นอย่าง:
 
 * [Go](https://hub.docker.com/_/golang/)
 * [Perl](https://hub.docker.com/_/perl/)
