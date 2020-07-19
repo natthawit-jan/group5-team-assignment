@@ -262,11 +262,9 @@ CMD ["--help"]
 
 ### Don't install unnecessary packages
 
-To reduce complexity, dependencies, file sizes, and build times, avoid
-installing extra or unnecessary packages just because they might be "nice to
-have." For example, you don’t need to include a text editor in a database image.
+ควรหลีกเลี่ยงที่จะติดตั้ง packages อื่นๆที่ไม่จำเป็น เพื่อที่จะได้ช่วยลดความซับซ้อน ลดส่วนของซอฟแวร์ที่ไม่จำเป็น ลดขนาดของไฟล์ และลดระยะเวลาในการ build ไม่ใช่เพียงเพราะคุณเห็นเป็น packages ที่อยากจะเก็บไว้ เช่น คุณไม่จำเป็นต้องใช้ text editor ใน database image.
 
-### Decouple applications
+### Decouple application
 
 Each container should have only one concern. Decoupling applications into
 multiple containers makes it easier to scale horizontally and reuse containers.
