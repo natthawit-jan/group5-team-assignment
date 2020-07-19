@@ -429,27 +429,20 @@ LABEL vendor=ACME\ Incorporated \
 
 ### RUN
 
-[Dockerfile reference for the RUN instruction](../../engine/reference/builder.md#run)
+[เอกสารเพิ่มเติมสำหรับ ชุดคำสั่ง RUN ](../../engine/reference/builder.md#run)
 
-Split long or complex `RUN` statements on multiple lines separated with
-backslashes to make your `Dockerfile` more readable, understandable, and
-maintainable.
+การแบ่งคำสั่ง `RUN` เป็นหลายๆบรรทัดด้วยเครื่องหมาย `/` (Backslashe) จะทำให้ `Dockerfile` อ่านสะดวกและง่ายต่อการทำความเข้าใจมากขึ้น 
 
 #### apt-get
 
-Probably the most common use-case for `RUN` is an application of `apt-get`.
-Because it installs packages, the `RUN apt-get` command has several gotchas to
-look out for.
+สื่งที่น่าจะพบได้บ่อยที่สุดในชุดคำสั่ง `RUN` คือ คำสั่ง `apt-get`เนื่องจากมันถูกใช้เพื่อลง package ต่างๆ เพราะฉะนั้นคำสั่ง `RUN apt-get` จึงมีข้อแนะนำและข้อจำกัดบางอย่างที่ควรรู้ 
 
-Avoid `RUN apt-get upgrade` and `dist-upgrade`, as many of the "essential"
-packages from the parent images cannot upgrade inside an
-[unprivileged container](../../engine/reference/run.md#security-configuration). If a package
-contained in the parent image is out-of-date, contact its maintainers. If you
-know there is a particular package, `foo`, that needs to be updated, use
-`apt-get install -y foo` to update automatically.
+ควรหลีกเลี่ยงการเขียน `RUN apt-get upgrade` และ `dist-upgrade` เนื่องจากมี package จำนวนมากใน image parent ที่ไม่สามารถถูก upgrade ภายใน 
+[unprivileged container](../../engine/reference/run.md#security-configuration) ได้ 
 
-Always combine `RUN apt-get update` with `apt-get install` in the same `RUN`
-statement. For example:
+ถ้าคุณมี package ใดๆใน parent image ที่เป็นของเวอร์ชันเก่า ให้คุณติดต่อผู้ดูแล image นั้นๆ เพื่อดำเนินการ upgrade แต่ถ้าคุณมี package ที่ต้องการการอัพเดท คุณสามารถใช้คำสั่ง   `apt-get install -y <ชื่อ package>` โดยตรงได้ทันที
+
+ควรใช้คำสั่ง `RUN apt-get update` และ `apt-get install` ภายในชุดคำสั่ง `RUN` เดียวกันเสมอ เช่น
 
 ```dockerfile
 RUN apt-get update && apt-get install -y \
@@ -458,18 +451,19 @@ RUN apt-get update && apt-get install -y \
     package-foo
 ```
 
-Using `apt-get update` alone in a `RUN` statement causes caching issues and
-subsequent `apt-get install` instructions fail. For example, say you have a
-Dockerfile:
+การใช้คำสั่ง `apt-get update` เพียงอย่างเดียวในชุดคำสั่ง `RUN` นั้นจะสร้าง cache ไว้ใน Docker และทำให้คำสั่ง `apt-get install` ต่อมา ล้มเหลว
+
+ยกตัวอย่างเช่น 
+Dockerfile นี้
 
 ```dockerfile
-FROM ubuntu:18.04
+FROM u buntu:18.04
 RUN apt-get update
 RUN apt-get install -y curl
 ```
 
-After building the image, all layers are in the Docker cache. Suppose you later
-modify `apt-get install` by adding extra package:
+หลังจากที่เราสร้าง image นี้แล้ว  ทุกชั้นข้อมูลจะถูกเก็บไว้ที่ cache ของ Docker  
+สมมุติว่าเวลาต่อมา เราปรับเปลี่ยน `apt-get install` ด้วยการเพิ่ม package อื่นเช่น
 
 ```dockerfile
 FROM ubuntu:18.04
@@ -477,17 +471,13 @@ RUN apt-get update
 RUN apt-get install -y curl nginx
 ```
 
-Docker sees the initial and modified instructions as identical and reuses the
-cache from previous steps. As a result the `apt-get update` is _not_ executed
-because the build uses the cached version. Because the `apt-get update` is not
-run, your build can potentially get an outdated version of the `curl` and
-`nginx` packages.
+Docker จะถือว่าทั้งสองไฟล์นั้นเหมือนกัน และทำการใช้ข้อมูล cache จากครั้งก่อน ทำให้ `apt-get update` _ไม่ถูก_ จัดการ 
 
-Using `RUN apt-get update && apt-get install -y` ensures your Dockerfile
-installs the latest package versions with no further coding or manual
-intervention. This technique is known as "cache busting". You can also achieve
-cache-busting by specifying a package version. This is known as version pinning,
-for example:
+เมื่อเป็นเช่นนั้นแล้ว ในการสร้าง image ครั้งนี้ package `curl` และ `nginx` อาจจะไม่ได้ถูกอัปเดต
+
+การใช้คำสั่ง `RUN apt-get update && apt-get install -y` ทำให้เรามั่นใจได้ว่า Docker จะติดตั้ง package เวอร์ชันล่าสุดเสมอ โดยไม่ต้องเขียนโปรแกรมอะไรเพิ่มเติม  เทคนิคนี้ีชื่อว่า "cache busting" คุณสามารถใช้วิธีอื่นเพื่อให้ได้ผลลัพท์เหมือนที่กล่าวมาข้างต้น ด้วยการระบุ เวอร์ชันของ package ที่ต้องการใช้งานโดยตรง ซึ่งวิธีนี้ถูกเรียกว่า version pinning
+
+ยกตัวอย่างเช่น:
 
 ```dockerfile
 RUN apt-get update && apt-get install -y \
@@ -496,12 +486,12 @@ RUN apt-get update && apt-get install -y \
     package-foo=1.3.*
 ```
 
-Version pinning forces the build to retrieve a particular version regardless of
-what’s in the cache. This technique can also reduce failures due to unanticipated changes
-in required packages.
+การระบุเวอร์ชันโดยตรง (Version pinning) บังคับ Docker ให้สร้าง Image จากการดึงจากเวอร์ชันนั้นๆ จาก Internet โดยไม่สนใจว่า package เวอร์ชันนั้นมีอยู่ใน cache หรือไม่ 
 
-Below is a well-formed `RUN` instruction that demonstrates all the `apt-get`
-recommendations.
+เทคนิคนี้ยังคงช่วยลดความผิดพลาดที่เกิดขึ้นจากการเปลี่ยนแปลงที่ไม่คาดคิดใน package เหล่านั้นอีกด้วย 
+
+ตัวอย่างด้านล่างเหล่านี้ คือ format ที่ถูกต้องในการเขียนชุดคำสั่ง `RUN` ซึ่งถูกแนะนำให้ใช้งานคู่กับ `apt-get` 
+
 
 ```dockerfile
 RUN apt-get update && apt-get install -y \
@@ -520,44 +510,41 @@ RUN apt-get update && apt-get install -y \
  && rm -rf /var/lib/apt/lists/*
 ```
 
-The `s3cmd` argument specifies a version `1.1.*`. If the image previously
-used an older version, specifying the new one causes a cache bust of `apt-get
-update` and ensures the installation of the new version. Listing packages on
-each line can also prevent mistakes in package duplication.
+`s3cmd` ระบุเวอร์ชันเป็น `1.1.*`  ถ้า image ก่อนหน้านี้ใช้เวอร์ชันเก่ากว่านี้ การระบุเวอร์ชันใหม่จะทำให้ไม่เกิดการใช้ cache ใน `apt-get update` และทำให้มั่นใจได้ว่า Docker จะติดตั้ง package เวอร์ชันใหม่เสมอ 
 
-In addition, when you clean up the apt cache by removing `/var/lib/apt/lists` it
-reduces the image size, since the apt cache is not stored in a layer. Since the
-`RUN` statement starts with `apt-get update`, the package cache is always
-refreshed prior to `apt-get install`.
+การเขียน package แบบแยกบรรทัดแบบนี้ จะทำให้ความผิดพลาดที่จะเขียนชื่อ package ซ้ำกันน้อยลง 
 
-> Official Debian and Ubuntu images [automatically run `apt-get clean`](https://github.com/moby/moby/blob/03e2923e42446dbb830c654d0eec323a0b4ef02a/contrib/mkimage/debootstrap#L82-L105),
-> so explicit invocation is not required.
+เมื่อคุณล้าง apt cache โดยการลบ `/var/lib/apt/lists` นั้น ขนาดของ image จะเล็กลง เนื่องจาก apt cache จะไม่ถูกจัดเก็บในชั้นข้อมูลอีกต่อไป
 
-#### Using pipes
+เมื่อชุดคำสั่ง `RUN` เริ่มด้วย `apt-get update` ข้อมูล cache ของ package จะถูกรีเซทใหม่อยู่เสมอ ก่อนที่จะทำคำสั่ง `apt-get install`
 
-Some `RUN` commands depend on the ability to pipe the output of one command into another, using the pipe character (`|`), as in the following example:
+> Debian และ Ubuntu official image ทำ [`apt-get clean โดยอัตโนมัติ`](https://github.com/moby/moby/blob/03e2923e42446dbb830c654d0eec323a0b4ef02a/contrib/mkimage/debootstrap#L82-L105) 
+> จึงไม่จำเป็นต้องระบุในชุดคำสั่ง `RUN` ก็ได้
+
+#### การใช้ pipes
+
+ชุดคำสั่ง `RUN` บางครั้งสามารถใช้ pipe (`|`) ในการส่ง output จาก คำสั่งหนึ่งไปยังอีกอันหนึ่งได้ ยกตัวอย่างเช่น
 
 ```dockerfile
 RUN wget -O - https://some.site | wc -l > /number
 ```
 
-Docker executes these commands using the `/bin/sh -c` interpreter, which only
-evaluates the exit code of the last operation in the pipe to determine success.
-In the example above this build step succeeds and produces a new image so long
-as the `wc -l` command succeeds, even if the `wget` command fails.
+Docker จัดการคำสั่งชุดนี้ด้วย `/bin/sh -c` ซึ่งจะสำเร็จก็ต่อเมื่อคำสั่งสุดท้ายของ pipe นั้นเสร็จสิ้น 
 
-If you want the command to fail due to an error at any stage in the pipe,
-prepend `set -o pipefail &&` to ensure that an unexpected error prevents the
-build from inadvertently succeeding. For example:
+ในตัวอย่างข้างต้นจะเห็นว่าการสร้าง image นี้จะสำเร็จหรือไม่ นั้นขึ้นอยู่กับคำสั่ง `wc -l` โดยไม่คำนึงว่าคำสั่ง `wget` จะสำเร็จหรือไม่ก็ตาม 
+
+ถ้าคุณต้องการให้ทุก error ที่เกิดขึ้นใน pipe หยุดการสร้าง image โดยทันที ให้เพิ่มคำสั่ง `set -o pipefail &&` ไปที่ข้างหน้าของ pipe 
+
+ยกตัวอย่างเช่น
 
 ```dockerfile
 RUN set -o pipefail && wget -O - https://some.site | wc -l > /number
 ```
-> Not all shells support the `-o pipefail` option.
->
-> In cases such as the `dash` shell on
-> Debian-based images, consider using the _exec_ form of `RUN` to explicitly
-> choose a shell that does support the `pipefail` option. For example:
+> ไม่ใช่ทุก shells รองรับคำสั่งตัวเลือก `-o pipefail` (`dash` shell บน
+> Debian-based images) 
+> ในกรณีนั้น ให้ใช้ ชุดคำสั่ง `RUN` ในรูปแบบ ของ _exec_ เพื่อทำการเลือก shell ที่รองรับคำสั่งตัวเลือก `pipefail` ก่อน 
+> 
+> ยกตัวอย่างเช่น 
 >
 > ```dockerfile
 > RUN ["/bin/bash", "-c", "set -o pipefail && wget -O - https://some.site | wc -l > /number"]
