@@ -81,17 +81,14 @@ Sending build context to Docker daemon  187.8MB
 
 ### Pipe Dockerfile through `stdin`
 
-Docker has the ability to build images by piping `Dockerfile` through `stdin`
-with a _local or remote build context_. Piping a `Dockerfile` through `stdin`
-can be useful to perform one-off builds without writing a Dockerfile to disk,
-or in situations where the `Dockerfile` is generated, and should not persist
-afterwards.
+คุณสามารถสร้าง image โดยใช้ pipe นำเข้าไฟล์ที่อยู่ใน _local_ หรือ _remote_ ได้ด้วย `stdin` 
+วิธีการนี้เป็นประโยชน์มากถ้าคุณต้องการสร้าง image โดยที่ไม่ต้องการบันทึก `Dockerfile` ไว้บนเครื่อง หรือในกรณีที่ `Dockerfile` ถูกสร้างขึ้นมาโดยอัตโนมัติและไม่ต้องการให้ถูกเก็บไว้หลังจากถูกใช้สร้าง image เสร็จ
 
-> The examples in this section use [here documents](http://tldp.org/LDP/abs/html/here-docs.html)
-> for convenience, but any method to provide the `Dockerfile` on `stdin` can be
-> used.
+> ตัวอย่างนี้ใข้เนื้อหาจาก [here documents](http://tldp.org/LDP/abs/html/here-docs.html)
+> เพื่อความรวดเร็วในการนำเสนอ แต่คุณสามารถใข้วิธีใดก็ได้ที่สามารถส่ง `Dockerfile` ผ่าน `stdin` 
+> เพื่อใช้ฟังค์ชันนี้
 > 
-> For example, the following commands are equivalent: 
+> ยกตัวอย่างคำสั่งที่คล้ายกัน 
 > 
 > ```bash
 > echo -e 'FROM busybox\nRUN echo "hello world"' | docker build -
@@ -104,8 +101,7 @@ afterwards.
 > EOF
 > ```
 > 
-> You can substitute the examples with your preferred approach, or the approach
-> that best fits your use-case.
+> วิธีการอื่นนอกจากนี้สามารถทำได้ตามความต้องการของคุณได้เลย
 
 
 #### Build an image using a Dockerfile from stdin, without sending build context
