@@ -536,19 +536,13 @@ RUN set -o pipefail && wget -O - https://some.site | wc -l > /number
 
 ### ENV
 
-[Dockerfile reference for the ENV instruction](../../engine/reference/builder.md#env)
+[อ้างอิง Dockerfile สำหรับ ENV ](../../engine/reference/builder.md#env)
 
-To make new software easier to run, you can use `ENV` to update the
-`PATH` environment variable for the software your container installs. For
-example, `ENV PATH /usr/local/nginx/bin:$PATH` ensures that `CMD ["nginx"]`
-just works.
+การทำให้ซอฟแวร์ใหม่ๆง่ายที่จะประมวลผล คุณสามารถใช้  `ENV` เพื่ออัพเดต `PATH` environment ของตัวแปรสำหรับซอฟแวร์ที่ container ของคุณได้ติดตั้ง ยกตัวอย่าง เช่น `ENV PATH /usr/local/nginx/bin:$PATH` ยืนยันได้ว่า `CMD ["nginx"]` นั้น ใช้งานได้
 
-The `ENV` instruction is also useful for providing required environment
-variables specific to services you wish to containerize, such as Postgres’s
-`PGDATA`.
+คำสั่ง `ENV`  ก็ยังเป็นประโยชน์สำหรับการจัดหา environment ของตัวแปรที่ต้องการ ซึ่งจะให้บริการในสิ่งที่คุณต้องการ containerize เช่น Postgres’s`PGDATA`
 
-Lastly, `ENV` can also be used to set commonly used version numbers so that
-version bumps are easier to maintain, as seen in the following example:
+ท้ายที่สุดแล้ว `ENV` ยังสามารถใช้เพื่อตั้งค่าหมายเลขของเวอร์ชั่นที่ต้องการใช้ ดังนั้นเมื่อเกิด version bumps ก็จะสามารถปรับปรุงได้ง่ายขึ้น ดังเช่นตัวอย่างต่อไปนี้
 
 ```dockerfile
 ENV PG_MAJOR 9.3
@@ -556,15 +550,13 @@ ENV PG_VERSION 9.3.4
 RUN curl -SL http://example.com/postgres-$PG_VERSION.tar.xz | tar -xJC /usr/src/postgress && …
 ENV PATH /usr/local/postgres-$PG_MAJOR/bin:$PATH
 ```
+เปรียบเสมือนกับที่ในโปรแกรมมีค่าตัวแปรคงที่ (ซึ่งจะตรงข้ามกับ hard-coding values)
+วิธีการนี้จะทำให้คุณเปลี่ยนแค่ `ENV` เดียว เพื่อที่จะได้ bump เวอร์ชั่นของซอฟแวร์ใน container  ของคุณโดยอัตโนมัติ
 
-Similar to having constant variables in a program (as opposed to hard-coding
-values), this approach lets you change a single `ENV` instruction to
-auto-magically bump the version of the software in your container.
-
-Each `ENV` line creates a new intermediate layer, just like `RUN` commands. This
-means that even if you unset the environment variable in a future layer, it
-still persists in this layer and its value can't be dumped. You can test this by
-creating a Dockerfile like the following, and then building it.
+ในแต่ละบรรทัดของ `ENV` จะสร้าง layer ใหม่ ซึ่งจะเหมือนกับคำสั่ง `RUN`
+โดยแสดงให้เห็นว่า ถึงแม้ว่าคุณจะยกเลิกการตั้งค่า environment ของตัวแปรใน layer ที่จะเกิดขึ้นข้างหน้า
+แต่มันก็ยังคงมีอยู่ใน layer นี้ และค่าของมันก็จะไม่สามารถ dump ได้
+โดยคุณสามารถทดสอบด้วยการสร้าง Dockerfile เหมือนดังต่อไปนี้ และหลังจากนั้นจึงทำการ build 
 
 ```dockerfile
 FROM alpine
@@ -579,13 +571,12 @@ $ docker run --rm test sh -c 'echo $ADMIN_USER'
 mark
 ```
 
-To prevent this, and really unset the environment variable, use a `RUN` command
-with shell commands, to set, use, and unset the variable all in a single layer.
-You can separate your commands with `;` or `&&`. If you use the second method,
-and one of the commands fails, the `docker build` also fails. This is usually a
-good idea. Using `\` as a line continuation character for Linux Dockerfiles
-improves readability. You could also put all of the commands into a shell script
-and have the `RUN` command just run that shell script.
+เพื่อป้องกันเหตุการณ์นี้ และเมื่อไม่ได้ยกเลิกการตั้งค่า environment ของตัวแปร
+ใช้คำสั่ง `RUN` ด้วย shell commands เพื่อทำการ ตั้งค่า ใช้ และยกเลิกการตั้งค่าตัวแปรทั้งหมดใน layer เดี่ยว
+คุณสามารถแยกคำสั่งด้วยเครื่องหมาย `;` หรือ `&&` 
+ถ้าหากคุณใช้วิธีที่ 2 และหนึ่งในคำสั่งนั้นล้มเหลว ก็จะทำให้ `docker build` ล้มเหลวไปด้วย ซึ่งนี่ก็เป็นอีกหนึ่งไอเดียที่ดี
+การใช้เครื่องหมาย `\` ในการเว้นบรรทัดตัวอักษรสำหรับ Dockerfiles ใน Linux สามารถทำให้การอ่านมีประสิทธิภาพยิ่งขึ้น
+คุณสามารถใช้ทุกคำสั่งใน shell script และกด `RUN` เพื่อที่จะได้ทำการ `RUN` shell script นั้น
 
 ```dockerfile
 FROM alpine
