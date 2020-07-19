@@ -688,9 +688,7 @@ auto-extraction capability, you should always use `COPY`.
 
 [Dockerfile reference for the ENTRYPOINT instruction](../../engine/reference/builder.md#entrypoint)
 
-The best use for `ENTRYPOINT` is to set the image's main command, allowing that
-image to be run as though it was that command (and then use `CMD` as the
-default flags).
+การใช้งานที่ดีที่สุดสำหรับ ENTRYPOINT คือ set คำสั่ง image,อนุญาตให้ Image run ผ่านคำสั่ง (และใช้ CMD เป็นค่าเริ่มต้น) 
 
 Let's start with an example of an image for the command line tool `s3cmd`:
 
@@ -699,24 +697,24 @@ ENTRYPOINT ["s3cmd"]
 CMD ["--help"]
 ```
 
-Now the image can be run like this to show the command's help:
+Image สามารถเรียกใช้เพื่อแสดงวิธีใช้คำสั่ง
 
 ```bash
 $ docker run s3cmd
 ```
 
-Or using the right parameters to execute a command:
+หรือใช้ parameters ที่เหมาะสม Run คำสั่ง
 
 ```bash
 $ docker run s3cmd ls s3://mybucket
 ```
 
-This is useful because the image name can double as a reference to the binary as
-shown in the command above.
+สิ่งนี้มีประโยชน์เพราะ Image name สามารถเพิ่มเป็น double ของการอ้างอิงถึง Binary ดังที่แสดงคำสั่งด้านบน
 
-The `ENTRYPOINT` instruction can also be used in combination with a helper
-script, allowing it to function in a similar way to the command above, even
-when starting the tool may require more than one step.
+คำสั่ง ENTRYPOINT สามารถใช้ร่วมกับ helper script, 
+อนุญาตให้ฟังก์ชั่นทำงานที่คล้ายกันกับคำสั่งข้างบน 
+แม้เมื่อเริ่มต้นเครื่องมืออาจจำเป็นต้องมากกว่าหนึ่งขั้นตอน
+
 
 For example, the [Postgres Official Image](https://hub.docker.com/_/postgres/)
 uses the following script as its `ENTRYPOINT`:
@@ -738,15 +736,10 @@ fi
 exec "$@"
 ```
 
-> Configure app as PID 1
->
-> This script uses [the `exec` Bash command](http://wiki.bash-hackers.org/commands/builtin/exec)
-> so that the final running application becomes the container's PID 1. This
-> allows the application to receive any Unix signals sent to the container.
-> For more, see the [`ENTRYPOINT` reference](../../engine/reference/builder.md#entrypoint).
+> กำหนดแอพเป็น PID 1
+script นี้ใช้คำสั่ง exec Bash ดังนั้นแอปพลิเคชั่นสุดท้ายที่ทำงานจะกลายเป็น PID ของ container1 สิ่งนี้อนุญาตให้แอปพลิเคชันรับสัญญาณ Unix ใด ๆ ส่งไปยัง container, สำหรับข้อมูลเพิ่มเติมดูการอ้างอิง ENTRYPOINT
 
-The helper script is copied into the container and run via `ENTRYPOINT` on
-container start:
+Helper script จะถูก copy ลงใน container และเรียกใช้ผ่าน ENTRYPOINT เมื่อเริ่มต้น container
 
 ```dockerfile
 COPY ./docker-entrypoint.sh /
@@ -754,7 +747,7 @@ ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["postgres"]
 ```
 
-This script allows the user to interact with Postgres in several ways.
+script นี้อนุญาตให้ผู้ใช้โต้ตอบกับ Postgres ได้หลายวิธี
 
 It can simply start Postgres:
 
@@ -762,13 +755,13 @@ It can simply start Postgres:
 $ docker run postgres
 ```
 
-Or, it can be used to run Postgres and pass parameters to the server:
+หรือสามารถเรียกใช้ Postgres และส่ง parameters ไปยัง server
 
 ```bash
 $ docker run postgres postgres --help
 ```
 
-Lastly, it could also be used to start a totally different tool, such as Bash:
+สุดท้ายก็สามารถเริ่มใช้กับเครื่องมือที่แตกต่างเช่น Bash
 
 ```bash
 $ docker run --rm -it postgres bash
