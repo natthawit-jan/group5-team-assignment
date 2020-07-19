@@ -106,17 +106,15 @@ Sending build context to Docker daemon  187.8MB
 
 #### Build an image using a Dockerfile from stdin, without sending build context
 
-Use this syntax to build an image using a `Dockerfile` from `stdin`, without
-sending additional files as build context. The hyphen (`-`) takes the position
-of the `PATH`, and instructs Docker to read the build context (which only
-contains a `Dockerfile`) from `stdin` instead of a directory:
+คุณสามารถสร้าง image ด้วย `Dockerfile` ผ่าน `stdin` โดยไม่ต้อง
+ใส่ไฟล์อะไรเลยใน build context ด้วยการใส่ (`-`) ตรงตำแหน่งที่ต้องใส่ `PATH` เพื่อสั่งให้ Docker อ่าน  build context (ที่มีแค่ `Dockerfile`) ผ่าน `stdin` แทนที่จะเป็น Directory
 
 ```bash
 docker build [OPTIONS] -
 ```
 
-The following example builds an image using a `Dockerfile` that is passed through
-`stdin`. No files are sent as build context to the daemon.
+ตัวอย่างการสร้าง image โดยใช้  `Dockerfile` ที่ถูกส่งจาก 
+`stdin` จะเห็นได้ว่าไม่มีไฟล์ใดถูกส่งไปเป็น build context เลย
 
 ```bash
 docker build -t myimage:latest -<<EOF
@@ -125,15 +123,13 @@ RUN echo "hello world"
 EOF
 ```
 
-Omitting the build context can be useful in situations where your `Dockerfile`
-does not require files to be copied into the image, and improves the build-speed,
-as no files are sent to the daemon.
+การไม่ส่ง build context เป็นผลดีในบางกรณี เช่นเมื่อคุณไม่ต้องการ
+ให้ไฟล์ใดถูก copy ไปที่ image หรือเมื่อคุณต้องการลดเวลาการสร้าง image เนื่องจากไม่มีไฟล์ใดๆ ถูกส่งไปที่ Docker เลย
 
-If you want to improve the build-speed by excluding _some_ files from the build-
-context, refer to [exclude with .dockerignore](#exclude-with-dockerignore).
+ถ้าคุณสนใจในเรื่องการลดเวลาที่ใช้การสร้าง image ด้วยการจัดการไฟล์ ศึกษาต่อได้ที่ [exclude with .dockerignore](#exclude-with-dockerignore).
 
-> **Note**: Attempting to build a Dockerfile that uses `COPY` or `ADD` will fail
-> if this syntax is used. The following example illustrates this:
+> **ข้อควรระวัง**: ความพยายามที่จะสร้าง image โดยใช้ชุดคำสั่ง `COPY` หรือ `ADD` จะไม่สำเร็จ
+> ถ้าใช้ syntax ต่อไปนี้ 
 > 
 > ```bash
 > # create a directory to work in
