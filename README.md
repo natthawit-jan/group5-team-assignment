@@ -317,40 +317,27 @@ RUN apt-get update && apt-get install -y \
 
 ### Leverage build cache
 
-When building an image, Docker steps through the instructions in your
-`Dockerfile`, executing each in the order specified. As each instruction is
-examined, Docker looks for an existing image in its cache that it can reuse,
-rather than creating a new (duplicate) image.
+ตอนที่สร้าง image, Docker จะทำตามขั้นตอน instructions ตามในไฟล์ `Dockerfile` โดยไล่มาเป็นลำดับ และในแต่ละ instruction ที่ถูกอ่าน Docker จะไปหา image ที่มีอยู่แล้วก่อนใน cache ที่สามารถนำกลับมาใช้ใหม่ได้ (reuse) ก่อนที่จะไปสร้าง image ใหม่
 
-If you do not want to use the cache at all, you can use the `--no-cache=true`
-option on the `docker build` command. However, if you do let Docker use its
-cache, it is important to understand when it can, and cannot, find a matching
-image. The basic rules that Docker follows are outlined below:
+ถ้าเราไม่ต้องการใช้ cache เราสามารถใช้ option `--no-cache=true` ที่คำสั่ง `docker build` ได้ แต่ว่าถ้าเราให้ Docker ใช้ cache ของตัวมันเอง เราจำเป็นต้องเข้าใจว่ามันจะหา image ที่ match ได้หรือไม่ได้ ต่อจากนี้คือกฏเบื้องต้นที่ Docker จะปฏิบัติตามเป็นดังนี้:
 
-- Starting with a parent image that is already in the cache, the next
-  instruction is compared against all child images derived from that base
-  image to see if one of them was built using the exact same instruction. If
-  not, the cache is invalidated.
+- เริ่มจาก parent image ที่มีอยู่แล้วใน cache, instruction ถัดไปจะถูกเปรียบเทียบกับ child images
+  ทั้งหมดที่ถูกแปลงมาจาก base image เพื่อดูว่ามีตัวไหนไหมที่ถูก build โดยใช้ instruction เดียวกัน ถ้าไม่
+  cache จะถูกทำให้เป็นโมฆะ       
 
-- In most cases, simply comparing the instruction in the `Dockerfile` with one
-  of the child images is sufficient. However, certain instructions require more
-  examination and explanation.
+- โดยทั่วไป การเปรียบเทียบ  instruction ใน `Dockerfile` สักตัวหนึ่งใน child image ก็เพียงพอแล้ว 
+  แต่ว่าบาง instruction ต้องการการรวจสอบและการขยายความที่มากขึ้น
 
-- For the `ADD` and `COPY` instructions, the contents of the file(s)
-  in the image are examined and a checksum is calculated for each file.
-  The last-modified and last-accessed times of the file(s) are not considered in
-  these checksums. During the cache lookup, the checksum is compared against the
-  checksum in the existing images. If anything has changed in the file(s), such
-  as the contents and metadata, then the cache is invalidated.
+- สำหรับ instruction `ADD` และ `COPY` นั้น content ของไฟล์ใน image ถูก examine และมีการ checksum 
+  ในทุกๆไฟล์ โดยที่ last-modified และ last-accessed times ของไฟล์ไม่ได้ถูกคิดไว้ใน checksum ด้วย 
+  และในระหว่างการค้นหา cache นั้น checksum จะถูกเทียบกับ image ที่มีอยู่ก่อนหน้า 
+  ถ้าสมมติว่ามีไฟล์ที่ถูกเปลี่ยนแปลงในนั้น เช่น contents และ metadata, cache จะเป็นโมฆะทันที
 
-- Aside from the `ADD` and `COPY` commands, cache checking does not look at the
-  files in the container to determine a cache match. For example, when processing
-  a `RUN apt-get -y update` command the files updated in the container
-  are not examined to determine if a cache hit exists.  In that case just
-  the command string itself is used to find a match.
+- นอกจากคำสั่ง `ADD` และ `COPY` แล้ว cache checking ก็ไม่ได้ไปดูไฟล์ใน container เพื่อที่จะทำการ cache
+  match เลย ยกตัวอย่างเช่น เมื่อรันคำสั่ง `RUN apt-get -y update` ไฟล์ที่ถูกอัพเดทใน container 
+  จะไม่ถูกนำมาชี้ว่ามี cache hit อยู่ไหม ในกรณีนี้จะมีแค่ command string เท่านั้นที่ถูกใช้ในการหา match
 
-Once the cache is invalidated, all subsequent `Dockerfile` commands generate new
-images and the cache is not used.
+เมื่อใดที่ cache เป็นโมฆะแล้ว คำสั่งที่ตามมาใน `Dockerfile` ทั้งหมดจะถูกสร้างขึ้นมาใหม่ และ cache จะไม่ถูกใช้
 
 ## ชุดคำสั่งต่างๆ ใน Dockerfile
 
