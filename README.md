@@ -161,28 +161,23 @@ context, refer to [exclude with .dockerignore](#exclude-with-dockerignore).
 
 #### Build from a local build context, using a Dockerfile from stdin
 
-Use this syntax to build an image using files on your local filesystem, but using
-a `Dockerfile` from `stdin`. The syntax uses the `-f` (or `--file`) option to
-specify the `Dockerfile` to use, using a hyphen (`-`) as filename to instruct
-Docker to read the `Dockerfile` from `stdin`:
+เราจะใช้ syntax นี้เพื่อสร้าง image โดยใช้ไฟล์บนระบบ local แต่ใช้ `Dockerfile`จาก `stdin` โดยการใช้เครื่องหมาย option `-f` (หรือ `--file`) เพื่อระบุ `Dockerfile` ที่จะใช้ และใช้เครื่องหมายขีด (`-` หรือ Hyphen) เพื่อบอกชื่อไฟล์ให้ Docker ไปอ่าน `Dockerfile` จาก `stdin`:
 
 ```bash
 docker build [OPTIONS] -f- PATH
 ```
 
-The example below uses the current directory (`.`) as the build context, and builds
-an image using a `Dockerfile` that is passed through `stdin` using a [here
-document](http://tldp.org/LDP/abs/html/here-docs.html).
+ตัวอย่างข้างล่างนี้ใช้ directory ปัจจุบัน (`.`) เป็น build context และสร้าง image โดยการใช้ `Dockerfile` ผ่าน `stdin` โดยการใช้[เอกสารชุดนี้](http://tldp.org/LDP/abs/html/here-docs.html)
 
 ```bash
-# create a directory to work in
+# สร้าง directory ที่จะทำงาน
 mkdir example
 cd example
 
-# create an example file
+# สร้างไฟล์ตัวอย่าง
 touch somefile.txt
 
-# build an image using the current directory as context, and a Dockerfile passed through stdin
+# สร้าง image โดยใช้ directory ปัจจุบันเป็น context และ Dockerfile ที่ผ่าน stdin
 docker build -t myimage:latest -f- . <<EOF
 FROM busybox
 COPY somefile.txt .
@@ -192,21 +187,15 @@ EOF
 
 #### Build from a remote build context, using a Dockerfile from stdin
 
-Use this syntax to build an image using files from a remote `git` repository, 
-using a `Dockerfile` from `stdin`. The syntax uses the `-f` (or `--file`) option to
-specify the `Dockerfile` to use, using a hyphen (`-`) as filename to instruct
-Docker to read the `Dockerfile` from `stdin`:
+เราจะใช้ syntax นี้เพื่อสร้าง image โดยใช้ไฟล์จากรีโมทของ `git` repository และใช้ `Dockerfile`จาก `stdin` โดยการใช้เครื่องหมาย option `-f` (หรือ `--file`) เพื่อระบุ `Dockerfile` ที่จะใช้ และใช้เครื่องหมายขีด (`-` หรือ Hyphen) เพื่อบอกชื่อไฟล์ให้ Docker ไปอ่าน `Dockerfile` จาก `stdin`:
 
 ```bash
 docker build [OPTIONS] -f- PATH
 ```
 
-This syntax can be useful in situations where you want to build an image from a
-repository that does not contain a `Dockerfile`, or if you want to build with a custom
-`Dockerfile`, without maintaining your own fork of the repository.
+Syntax จะมีประโยชน์มากในเวลาที่เราต้องการที่จะสร้าง image จาก repository ที่ไม่มี `Dockerfile` อยู่ในนั้น หรือสร้าง custom `Dockerfile` โดยที่ไม่เก็บ fork ของตัวเองใน repository
 
-The example below builds an image using a `Dockerfile` from `stdin`, and adds
-the `hello.c` file from the ["hello-world" Git repository on GitHub](https://github.com/docker-library/hello-world).
+ตัวอย่างข้างล่างเป็นการสร้าง image โดยใช้ `Dockerfile` จาก `stdin` และเพิ่มไฟล์ `hello.c` จาก ["hello-world" Git repository บน GitHub](https://github.com/docker-library/hello-world)
 
 ```bash
 docker build -t myimage:latest -f- https://github.com/docker-library/hello-world.git <<EOF
@@ -217,65 +206,59 @@ EOF
 
 > **Under the hood**
 >
-> When building an image using a remote Git repository as build context, Docker 
-> performs a `git clone` of the repository on the local machine, and sends
-> those files as build context to the daemon. This feature requires `git` to be
-> installed on the host where you run the `docker build` command.
+> เมื่อสร้าง image โดยใช้ remote Git repository เป็น build context แล้ว
+> Docker จะใช้คำสั่ง `git clone` ของ repository บนเครื่อง local และส่ง
+> ไฟล์เหล่านั้นเป็น build context ไปที่ daemon โดยที่ feature นี้ต้องใช้ `git` 
+> เพื่อที่จะถูกติดตั้งที่ host ที่เราจะสามารถ run คำสั่ง `docker build` ได้
 
 ### Exclude with .dockerignore
 
-To exclude files not relevant to the build (without restructuring your source
-repository) use a `.dockerignore` file. This file supports exclusion patterns
-similar to `.gitignore` files. For information on creating one, see the
-[.dockerignore file](../../engine/reference/builder.md#dockerignore-file).
+เราจะใช้ไฟล์ `.dockerignore` เพื่อที่จะไม่ต้อง build ไฟล์ที่ไม่เกี่ยวข้องรวมไปด้วย (ไม่ต้องจัดโครงสร้างของ source repository ใหม่) ไฟล์นี้รองรับ exclusion patterns คล้ายกับไฟล์ `.gitignore` ส่วนข้อมูลในการสร้างเพิ่มเติม สามารถดูได้ที่ [.dockerignore file](../../engine/reference/builder.md#dockerignore-file)
+
 
 ### Use multi-stage builds
 
-[Multi-stage builds](multistage-build.md) allow you to drastically reduce the
-size of your final image, without struggling to reduce the number of intermediate
-layers and files.
+[Multi-stage builds](multistage-build.md) ช่วยให้ลดขนาดของ final image อย่างมากโดยที่ไม่ต้องไปยุ่งกับการลดจำนวนของ intermediate layers และไฟล์ 
 
-Because an image is built during the final stage of the build process, you can
-minimize image layers by [leveraging build cache](#leverage-build-cache).
+เพราะว่า image ถูกสร้างระหว่างขั้นตอนสุดท้ายของกระบวนการ build เราสามารถลด image layers โดย [leveraging build cache](#leverage-build-cache)
 
-For example, if your build contains several layers, you can order them from the
-less frequently changed (to ensure the build cache is reusable) to the more
-frequently changed:
+ตัวอย่างเช่นถ้า build ของเรามีหลาย layers เราสามารถบอกให้พวกมันจากเปลี่ยนแปลงไม่บ่อย (เพื่อที่จะมั่นใจได้ว่า build cache สามารถนำกลับมาใช้ใหม่ได้) เป็นให้เปลี่ยนแปลงบ่อยขึ้นได้
 
-* Install tools you need to build your application
+* ติดตั้งเครื่องมือที่ต้องการเพื่อ build application ของคุณ
 
-* Install or update library dependencies
+* ติดตั้ง หรือ อัพเดท library dependencies
 
-* Generate your application
+* สร้าง application
 
-A Dockerfile for a Go application could look like:
+Dockerfile ของ application Go จะเป็นแบบดังนี้:
 
 ```dockerfile
 FROM golang:1.11-alpine AS build
 
-# Install tools required for project
-# Run `docker build --no-cache .` to update dependencies
+# ติดตั้ง tools ที่ต้องใช้สำหรับ project
+# รัน `docker build --no-cache .` เพื่ออัพเดท dependencies
 RUN apk add --no-cache git
 RUN go get github.com/golang/dep/cmd/dep
 
-# List project dependencies with Gopkg.toml and Gopkg.lock
-# These layers are only re-built when Gopkg files are updated
+# List project dependencies ด้วย Gopkg.toml และ Gopkg.lock
+# Layers เหล่านี้จะถูก rebuild ก็ต่อเมื่อไฟล์ Gopkg ถูกอัพเดทเท่านั้น
 COPY Gopkg.lock Gopkg.toml /go/src/project/
 WORKDIR /go/src/project/
-# Install library dependencies
+# ติดตั้ง library dependencies
 RUN dep ensure -vendor-only
 
-# Copy the entire project and build it
-# This layer is rebuilt when a file changes in the project directory
+# คัดลอก project ทั้งหมดและ build ใหม่
+# Layer นี้จะถูก rebuild ก็ต่อเมื่อไฟล์มีการเปลี่ยนแปลงใน project directory
 COPY . /go/src/project/
 RUN go build -o /bin/project
 
-# This results in a single layer image
+# ผลที่ออกมาในรูปของ single layer image
 FROM scratch
 COPY --from=build /bin/project /bin/project
 ENTRYPOINT ["/bin/project"]
 CMD ["--help"]
 ```
+
 
 ### Don't install unnecessary packages
 
