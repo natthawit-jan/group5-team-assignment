@@ -778,10 +778,9 @@ $ docker run --rm -it postgres bash
 
 [Dockerfile reference for the VOLUME instruction](../../engine/reference/builder.md#volume)
 
-The `VOLUME` instruction should be used to expose any database storage area,
-configuration storage, or files/folders created by your docker container. You
-are strongly encouraged to use `VOLUME` for any mutable and/or user-serviceable
-parts of your image.
+ควรใช้คำสั่ง VOLUME เพื่อแสดงพื้นที่เก็บข้อมูลฐาน ข้อมูลการจัดเก็บการกำหนดค่าหรือไฟล์ 
+โฟลเดอร์ที่สร้างโดย docker container ควรใช้ VOLUME สำหรับพื้นที่ที่ไม่แน่นอนหรือที่ผู้ใช้สามารถแก้ไขได้ส่วนของ image
+
 
 ### USER
 
