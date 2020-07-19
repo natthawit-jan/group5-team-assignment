@@ -300,12 +300,12 @@ were added to reduce this limitation:
 
 ### Sort multi-line arguments
 
-Whenever possible, ease later changes by sorting multi-line arguments
-alphanumerically. This helps to avoid duplication of packages and make the
-list much easier to update. This also makes PRs a lot easier to read and
-review. Adding a space before a backslash (`\`) helps as well.
+เพื่อที่จะทำให้ใช้งานได้ง่ายขึ้น ถ้าเป็นไปได้ควรเรียง argument แบบหลายๆบรรทัด (multi-line) ตามลำดับตัวเลขและอักขระ
+ซึ่งจะช่วยหลีกเลี่ยงการซ้อนทับกันของ packages และทำให้ง่ายต่อการอัพเดต  list มากกว่า
+และยังทำให้ PRs ง่ายต่อการอ่านและ review และการใส่ช่องว่าง (space) ก่อนเครื่องหมาย backslash (`\`)
+ก็สามารถช่วยได้เช่นกัน
 
-Here’s an example from the [`buildpack-deps` image](https://github.com/docker-library/buildpack-deps):
+ตัวอย่าง [`buildpack-deps` image](https://github.com/docker-library/buildpack-deps):
 
 ```dockerfile
 RUN apt-get update && apt-get install -y \
