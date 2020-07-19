@@ -637,17 +637,12 @@ $ docker run --rm test sh -c 'echo $ADMIN_USER'
 - [Dockerfile reference for the ADD instruction](../../engine/reference/builder.md#add)
 - [Dockerfile reference for the COPY instruction](../../engine/reference/builder.md#copy)
 
-Although `ADD` and `COPY` are functionally similar, generally speaking, `COPY`
-is preferred. That’s because it’s more transparent than `ADD`. `COPY` only
-supports the basic copying of local files into the container, while `ADD` has
-some features (like local-only tar extraction and remote URL support) that are
-not immediately obvious. Consequently, the best use for `ADD` is local tar file
-auto-extraction into the image, as in `ADD rootfs.tar.xz /`.
+ADD และ COPY มีฟังก์ชั่นคล้ายกัน โดยทั่วไปแล้วเราจะใช้ COPY
+COPY จะรองรับการคัดลอก Local filesไปยัง Container ในขณะที่ ADD สามารถแตกไฟล์ .tar 
+และสามารถดาวโหลดไฟล์จาก url ภายนอกได้ ดังนั้น การใช้ ADD ที่ดีที่สุด คือการดึงไฟล์ .tar เช่นเดียวกับใน ADD rootfs.tar.xz 
+หากมี dockfile หลายขั้นตอน ที่ใช้ไฟล์แตกต่างกัน คัดลอกเป็นรายบุคคล ทำทุกอย่างในครั้งเดียว
+ซึ่งช่วยให้มั่นใจว่าแคชการสร้างของแต่ละขั้นตอนจะ invalidated เท่านั้น 
 
-If you have multiple `Dockerfile` steps that use different files from your
-context, `COPY` them individually, rather than all at once. This ensures that
-each step's build cache is only invalidated (forcing the step to be re-run) if
-the specifically required files change.
 
 For example:
 
@@ -656,15 +651,12 @@ COPY requirements.txt /tmp/
 RUN pip install --requirement /tmp/requirements.txt
 COPY . /tmp/
 ```
-
-Results in fewer cache invalidations for the `RUN` step, than if you put the
+ผลลัพธ์ใน invalidations แคชน้อยลงสําหรับขั้นตอน RUN, น้อยกว่าถ้าใส่ 
 `COPY . /tmp/` before it.
 
-Because image size matters, using `ADD` to fetch packages from remote URLs is
-strongly discouraged; you should use `curl` or `wget` instead. That way you can
-delete the files you no longer need after they've been extracted and you don't
-have to add another layer in your image. For example, you should avoid doing
-things like:
+เพราะ image size มีความสำคัญ การใช้ ADD ดึง packages จาก remote URL นั้นไม่รับรอง 
+ควรใช้ curl หรือ wget แทน วิธีนี้จะทำให้สามารถลบไฟล์ที่ไม่ต้องการได้
+หลังจากที่แตกไฟล์ออกแล้วและไม่จำเป็นต้องเพิ่ม Layer อื่น เช่น
 
 ```dockerfile
 ADD http://example.com/big.tar.xz /usr/src/things/
@@ -680,9 +672,7 @@ RUN mkdir -p /usr/src/things \
     | tar -xJC /usr/src/things \
     && make -C /usr/src/things all
 ```
-
-For other items (files, directories) that do not require `ADD`’s tar
-auto-extraction capability, you should always use `COPY`.
+สำหรับรายการอื่น ๆ (files, directories) ที่ไม่ต้องการความสามารถในการแยกอัตโนมัติของ ADD ควรใช้ COPY
 
 ### ENTRYPOINT
 
