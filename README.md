@@ -532,38 +532,28 @@ RUN set -o pipefail && wget -O - https://some.site | wc -l > /number
 
 ### CMD
 
-[Dockerfile reference for the CMD instruction](../../engine/reference/builder.md#cmd)
+[การอ้างอิง Dockerfile สำหรับคำสั่ง CMD](../../engine/reference/builder.md#cmd)
 
-The `CMD` instruction should be used to run the software contained in your
-image, along with any arguments. `CMD` should almost always be used in the form
-of `CMD ["executable", "param1", "param2"…]`. Thus, if the image is for a
-service, such as Apache and Rails, you would run something like `CMD
-["apache2","-DFOREGROUND"]`. Indeed, this form of the instruction is recommended
-for any service-based image.
+ควรใช้คำสั่ง CMD เพื่อเรียกใช้ซอฟต์แวร์ที่มีอยู่ในimageของคุณ ควรใช้ CMD ในรูปแบบของ CMD ["executable", 
+"param1", "param2"…] เสมอ ถ้า image สำหรับบริการต่างๆ เช่น Apache and Rails คุณจะต้อง run บางอย่าง
+เหมือน CMD ["apache2","-DFOREGROUND"] จริงๆแล้วรูปแบบของคำสั่งนี้แนะนำสำหรับ image ที่ใช้ service ต่างๆ
 
-In most other cases, `CMD` should be given an interactive shell, such as bash,
-python and perl. For example, `CMD ["perl", "-de0"]`, `CMD ["python"]`, or `CMD
-["php", "-a"]`. Using this form means that when you execute something like
-`docker run -it python`, you’ll get dropped into a usable shell, ready to go.
-`CMD` should rarely be used in the manner of `CMD ["param", "param"]` in
-conjunction with [`ENTRYPOINT`](../../engine/reference/builder.md#entrypoint), unless
-you and your expected users are already quite familiar with how `ENTRYPOINT`
-works.
+ในกรณีอื่นๆ ส่วนใหญ่ CMD ควรจะเป็น shell แบบโต้ตอบ เช่น bash, python และ perl ตัวอย่างเช่น CMD ["perl", 
+"-de0"], CMD ["python"], or CMD ["php", "-a"] การใช้แบบฟอร์มนี้หมายความว่า เมื่อคุณดำเนินการบางอย่าง 
+เช่น docker run -it python คุณจะอยู่ใน shell ที่พร้อมใช้งาน ไม่ควรใช้ CMD ในลักษณะของ CMD ["param", "param"] 
+ร่วมกับ ENTRYPOINT เว้นแต่ว่าคุณและ users คุ้นเคยกับวิธีการทำงานของ ENTRYPOINT
 
 ### EXPOSE
 
-[Dockerfile reference for the EXPOSE instruction](../../engine/reference/builder.md#expose)
+[การอ้างอิง Dockerfile สำหรับคำสั่ง EXPOSE](../../engine/reference/builder.md#expose)
 
-The `EXPOSE` instruction indicates the ports on which a container listens
-for connections. Consequently, you should use the common, traditional port for
-your application. For example, an image containing the Apache web server would
-use `EXPOSE 80`, while an image containing MongoDB would use `EXPOSE 27017` and
-so on.
+คำสั่งEXPOSE ชี้ว่า PORT ที่ Container รับฟังการเชื่อมต่อ ดังนั้นคุณควรใช้พอร์ตทั่วไปสำหรับแอปพลิเคชันของคุณ 
+ตัวอย่างเช่นรูป image ที่มี Apache web server จะใช้ EXPOSE 80 ในขณะที่ image ที่มี MongoDB 
+จะใช้ EXPOSE 27017 เป็นต้น
 
-For external access, your users can execute `docker run` with a flag indicating
-how to map the specified port to the port of their choice.
-For container linking, Docker provides environment variables for the path from
-the recipient container back to the source (ie, `MYSQL_PORT_3306_TCP`).
+สำหรับการเข้าถึงจากภายนอก users สามารถเรียกใช้ docker run with a flag ที่มีการระบุวิธีแมปพอร์ตที่ระบุกับพอร์ตที่
+เลือกไว้ สำหรับการเชื่อมต่อ Container,  Docker จัดเตรียมตัวแปรสภาพแวดล้อมสำหรับpathจากContainer กลับไปที่
+ต้นทาง (ie, MYSQL_PORT_3306_TCP).
 
 ### ENV
 
