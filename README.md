@@ -286,17 +286,16 @@ to ensure that these containers can communicate.
 
 ### Minimize the number of layers
 
-In older versions of Docker, it was important that you minimized the number of
-layers in your images to ensure they were performant. The following features
-were added to reduce this limitation:
+ในเวอร์ชั่นเก่าของ Docker การลดตัวเลขของลำดับชั้น (layers) ใน images เป็นสิ่งสำคัญที่จะยืนยันว่า images ของคุณ มีประสิทธิภาพ
+ซึ่ง Features ดังที่จะกล่าวถึง ถูกเพิ่มเข้าไปเพื่อลดข้อจำกัดดังต่อไปนี้
 
-- Only the instructions `RUN`, `COPY`, `ADD` create layers. Other instructions
-  create temporary intermediate images, and do not increase the size of the build.
+- คำสั่ง `RUN`, `COPY`, `ADD` ใช้เพื่อสร้างลำดับชั้น (Layers) เท่านั้น. คำสั่งอื่นๆ ใช้สร้างตัวกลาง images ชั่วคราว
+และห้ามเพิ่มขนาดของการสร้าง (build)
 
-- Where possible, use [multi-stage builds](multistage-build.md), and only copy
-  the artifacts you need into the final image. This allows you to include tools
-  and debug information in your intermediate build stages without increasing the
-  size of the final image.
+- ถ้าหากเป็นไปได้ ควรใช้การ build ในหลายๆขั้นตอน ([multi-stage builds](multistage-build.md)) และคัดลอก artifacts ที่คุณต้องการลงใน image 
+ขั้นสุดท้าย ซึ่งจะทำให้คุณได้รวบรวมเครื่องมือ (tools) และข้อมูลการดีบัค (debug information) ในช่วงกลางของขั้นตอนการ build 
+โดยที่ image ขั้นสุดท้าย จะไม่มีการเพิ่มขนาดให้ใหญ่ขึ้นกว่าเดิม
+
 
 ### Sort multi-line arguments
 
