@@ -773,19 +773,3 @@ Image ที่สร้างด้วย  `ONBUILD` ควรได้รั�
 ระวังเมื่อใส่ `ADD` หรือ `COPY` ใน `ONBUILD`. "onbuild" image
 ล้มเหลวอย่างหายนะถ้าหาก new build’s context ขาด resource ที่เพิ่มเข้ามา .การเพิ่ม tag แยก 
 ตามที่แนะนำข้างต้นจะช่วยลดปัญหานี้โดยอนุญาตให้ผู้เขียน `Dockerfile` ทำการสร้างตัวเลือก
-
-## Examples for Official Images
-
-Images อย่างเป็นทางการเหล่านี้ มี `Dockerfile`s เป็นอย่าง:
-
-* [Go](https://hub.docker.com/_/golang/)
-* [Perl](https://hub.docker.com/_/perl/)
-* [Hy](https://hub.docker.com/_/hylang/)
-* [Ruby](https://hub.docker.com/_/ruby/)
-
-## Additional resources:
-
-* [Dockerfile Reference](../../engine/reference/builder.md)
-* [More about Base Images](baseimages.md)
-* [More about Automated Builds](../../docker-hub/builds/index.md)
-* [Guidelines for Creating Official Images](../../docker-hub/official_images.md)
