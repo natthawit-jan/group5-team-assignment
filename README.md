@@ -729,30 +729,25 @@ $ docker run --rm -it postgres bash
 
 [Dockerfile reference for the USER instruction](../../engine/reference/builder.md#user)
 
-If a service can run without privileges, use `USER` to change to a non-root
-user. Start by creating the user and group in the `Dockerfile` with something
-like `RUN groupadd -r postgres && useradd --no-log-init -r -g postgres postgres`.
+ถ้าหาก service สามารถทำงานโดยไม่ต้องใช้สิทธิพิเศษ ใช้ USER เพื่อเปลี่ยนแปลง non-root user 
+เริ่มต้นโดยการสร้าง User และกลุ่มใน Dockerfile อย่างเช่น
+`RUN groupadd -r postgres && useradd --no-log-init -r -g postgres postgres`.
 
 > Consider an explicit UID/GID
 >
-> Users and groups in an image are assigned a non-deterministic UID/GID in that
-> the "next" UID/GID is assigned regardless of image rebuilds. So, if it’s
-> critical, you should assign an explicit UID/GID.
+> User และกลุ่มใน image ถูกกำหนด UID / GID ใน "next" คือ กำหนดโดยไม่คำนึงถึงการสร้าง image ใหม่
+> ดังนั้น เราควรกำหนด UID / GID ที่ชัดเจน
 
-> Due to an [unresolved bug](https://github.com/golang/go/issues/13548) in the
-> Go archive/tar package's handling of sparse files, attempting to create a user
-> with a significantly large UID inside a Docker container can lead to disk
-> exhaustion because `/var/log/faillog` in the container layer is filled with
-> NULL (\0) characters. A workaround is to pass the `--no-log-init` flag to
-> useradd. The Debian/Ubuntu `adduser` wrapper does not support this flag.
 
-Avoid installing or using `sudo` as it has unpredictable TTY and
-signal-forwarding behavior that can cause problems. If you absolutely need
-functionality similar to `sudo`, such as initializing the daemon as `root` but
-running it as non-`root`, consider using [“gosu”](https://github.com/tianon/gosu).
+> เนื่องจากมีข้อผิดพลาดที่ไม่ได้รับการแก้ไขในการจัดการเก็บไฟล์ถาวร 
+สร้าง User ขนาดใหญ่ที่มี UID ภายใน Container Docker  
+ไปยัง disk เนื่องจาก `/var/log/faillog` ใน Layer container 
+เต็มไปด้วย NULL (\0) วิธีแก้ปัญหาคือการส่ง `--no-log-init` ไปที่ useradd
 
-Lastly, to reduce layers and complexity, avoid switching `USER` back and forth
-frequently.
+หลีกเลี่ยงการติดตั้งหรือใช้ sudo ที่มีลักษณะการทำงานของ TTY และการส่งต่อสัญญาณที่อาจทำให้เกิดปัญหาารถ 
+ถ้าต้องการฟังก์ชั่นที่คล้ายกับ sudo เช่นการเริ่มต้น daemon เป็น Root แต่ run เป็น non-root ให้ลองใช้“ gosu”
+
+สุดท้ายเพื่อลด Layer และความซับซ้อนให้หลีกเลี่ยงการสลับ USER 
 
 ### WORKDIR
 
