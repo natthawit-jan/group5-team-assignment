@@ -258,23 +258,19 @@ CMD ["--help"]
 
 ### Decouple application
 
-Each container should have only one concern. Decoupling applications into
-multiple containers makes it easier to scale horizontally and reuse containers.
-For instance, a web application stack might consist of three separate
-containers, each with its own unique image, to manage the web application,
-database, and an in-memory cache in a decoupled manner.
+Container ควรมีเพียง concern เดียว การแยก applications 
+เป็นหลาย container ทำให้ง่ายต่อการปรับขนาดในแนวนอนและการนำ container มาใช้ใหม่
+ตัวอย่างเช่น web application stack ประกอบไปด้วย 3 container 
+แยกกันแต่ละอัน มี image เฉพาะเพื่อจัดการ web application ฐานข้อมูลและ cache หน่วยความจำที่แยกกัน
 
-Limiting each container to one process is a good rule of thumb, but it is not a
-hard and fast rule. For example, not only can containers be
-[spawned with an init process](../../engine/reference/run.md#specify-an-init-process),
-some programs might spawn additional processes of their own accord. For
-instance, [Celery](http://www.celeryproject.org/) can spawn multiple worker
-processes, and [Apache](https://httpd.apache.org/) can create one process per
-request.
 
-Use your best judgment to keep containers as clean and modular as possible. If
-containers depend on each other, you can use [Docker container networks](../../network/index.md)
-to ensure that these containers can communicate.
+การจำกัดแต่ละ container ในหนึ่งกระบวนการเป็นกฎง่ายๆเป็นกระบวนการเริ่มต้น
+บางโปรแกรมอาจเป็นกระบวนการเพิ่มเติมตามข้อตกลง ตัวอย่างเช่น Celery เป็น 
+กระบวนการที่ทำงานหลายคน และ Apache สามารถสร้างหนึ่งกระบวนการต่อคำขอ
+
+
+เพื่อให้ container ที่ดีที่สุดที่เป็นไปได้ หากขึ้นอยู่กับแต่ละ container 
+สามารถใช้ Docker container networks เพื่อให้แน่ใจว่าคอนเทนเนอร์เหล่านี้สามารถสื่อสารได้
 
 ### Minimize the number of layers
 
